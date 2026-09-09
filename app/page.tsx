@@ -20,13 +20,29 @@ import {
   assessmentScore, blankProfile, calculateEffectiveSkills, careers, coreSkills,
   counsellors, demoProfile, interestChoices, questionBanks, rankCareers, tracks,
   verifiedResources, type Career, type CoreSkill, type Question, type StudentProfile,
-  type Track,
+  type Track, type StudentStep, type ChatMessage
 } from "@/lib/figr-product";
 
+import { Navigation } from "@/components/layout/Navigation";
+import { HeroSection } from "@/components/features/Hero";
+import { FeaturesSection } from "@/components/features/Features";
+import { Footer } from "@/components/layout/Footer";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { ProfileStep } from "@/components/assessment/ProfileStep";
+import { AssessmentStep } from "@/components/assessment/AssessmentStep";
+import { AnalysisStep } from "@/components/dashboard/AnalysisStep";
+import { CareersStep } from "@/components/dashboard/CareersStep";
+import { CounsellingStep } from "@/components/dashboard/CounsellingStep";
+import { GapsStep } from "@/components/dashboard/GapsStep";
+import { RoadmapStep } from "@/components/dashboard/RoadmapStep";
+import { LearningStep } from "@/components/dashboard/LearningStep";
+import { TutorStep } from "@/components/dashboard/TutorStep";
+import { QuizStep } from "@/components/dashboard/QuizStep";
+import { AdaptationStep } from "@/components/dashboard/AdaptationStep";
+import { HandoffStep } from "@/components/dashboard/HandoffStep";
+
 type Screen = "landing" | "student" | "counsellor";
-type StudentStep = "profile" | "assessment" | "analysis" | "careers" | "counselling" | "gaps" | "roadmap" | "learning" | "tutor" | "quiz" | "adaptation" | "handoff";
 type Icon = ComponentType<{ className?: string }>;
-type ChatMessage = { from: "student" | "guide"; text: string };
 
 const navItems: { id: StudentStep; label: string; icon: Icon }[] = [
   { id: "profile", label: "Profile", icon: UserRound },
@@ -92,7 +108,7 @@ function buildQuiz(career: Career): Question[] {
 }
 
 function Logo({ compact = false }: { compact?: boolean }) {
-  return <div className="brand-lockup"><span className="brand-mark"><GraduationCap /></span><span><strong>FIGR NXT</strong>{!compact && <small>Career Navigator + Learning Companion</small>}</span></div>;
+  return <div className="brand-lockup"><span className="brand-mark"><GraduationCap /></span><span><strong>FIGR IT</strong>{!compact && <small>Career Navigator + Learning Companion</small>}</span></div>;
 }
 
 function SectionHeading({ eyebrow, title, description }: { eyebrow: string; title: string; description: string }) {
@@ -112,17 +128,19 @@ function EmptyState({ icon: EmptyIcon, title, text, action, onAction }: { icon: 
 }
 
 function Landing({ start, openCounsellor }: { start: () => void; openCounsellor: () => void }) {
-  const horizon = [["AI & ML", BrainCircuit, "indigo"], ["Data", BarChart3, "teal"], ["Software", Code2, "blue"], ["Security", ShieldCheck, "navy"], ["Design", Palette, "violet"], ["Finance", Calculator, "amber"], ["Culinary", ChefHat, "coral"], ["Marketing", Activity, "rose"], ["Education", GraduationCap, "navy"], ["BPO", Headphones, "teal"]] as [string, Icon, string][];
-  return <main className="landing-shell">
-    <div className="ambient-orb orb-one" /><div className="ambient-orb orb-two" />
-    <nav className="landing-nav" aria-label="Main navigation"><Logo /><div className="landing-links"><button onClick={() => document.getElementById("journey")?.scrollIntoView({ behavior: "smooth" })}>How it works</button><button onClick={openCounsellor}>Counsellor portal</button><button className="nav-demo" onClick={start}>Skip to dashboard</button></div></nav>
-    <section className="hero"><div className="hero-copy"><span className="judge-badge"><Sparkles /> Interactive judge demo · about five minutes</span><h1>Turn uncertainty into a direction you can understand.</h1><p>Explore careers, gather real evidence, discuss your choices with a counsellor and build a learning path that adapts with you.</p><div className="hero-actions"><Button onClick={start} className="primary-button hero-button">Start Guided Demo <ArrowRight /></Button><Button variant="outline" onClick={() => document.getElementById("journey")?.scrollIntoView({ behavior: "smooth" })} className="secondary-button">See How It Works</Button></div></div>
-      <div className="horizon-card glass-panel"><div className="horizon-title"><span>Your Career Horizon</span><small>Guided discovery</small></div><div className="profile-node"><span><GraduationCap /></span><small>Your Profile</small></div><div className="horizon-grid">{horizon.map(([label, ItemIcon, tone], index) => <div key={label} className={`horizon-item ${tone} ${index === 0 ? "active" : ""}`}><span><ItemIcon /></span><small>{label}</small></div>)}</div><div className="highlighted-path"><i /><span>AI & ML · highlighted path</span><i /></div><div className="horizon-outcomes"><div><Check /><span><small>Evidence</small><strong>62% ready</strong></span></div><div><UsersRound /><span><small>Counsellor</small><strong>Discuss</strong></span></div><div><Route /><span><small>Roadmap</small><strong>12 weeks</strong></span></div></div></div>
-    </section>
-    <section id="journey" className="journey-panel glass-panel"><h2>Your Guided Discovery Journey</h2><div className="journey-line">{["Discover", "Assess", "Compare", "Discuss", "Prepare", "Adapt"].map((item, index) => <div key={item} className={index === 3 ? "human" : index === 0 ? "active" : ""}><span>{index + 1}</span><small>{item}</small></div>)}</div></section>
-    <section className="feature-grid">{[[MessageSquareText, "Learning Companion", "Context-aware support using the student's roadmap, gaps and quiz history."], [Compass, "Career Navigator", "Transparent weighted scoring across technical and non-technical careers."], [Target, "Skill Gap Analysis", "See current evidence, required levels and the next useful learning action."], [WandSparkles, "Adaptive Roadmap", "The visual path changes after checkpoint evidence—not just a notification."]].map(([FeatureIcon, title, text]) => { const I = FeatureIcon as Icon; return <article className="feature-card panel" key={title as string}><span><I /></span><h3>{title as string}</h3><p>{text as string}</p></article>; })}</section>
-    <footer className="landing-footer"><Logo compact /><span>Transparent scoring · Human guidance · Stable fallback</span></footer><Toaster richColors />
-  </main>;
+  return (
+    <main className="relative min-h-screen overflow-hidden bg-[var(--winter-bg)]">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[var(--winter-light)] rounded-full mix-blend-multiply filter blur-[100px] opacity-30 animate-pulse-soft" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#d7f2eb] rounded-full mix-blend-multiply filter blur-[100px] opacity-30 animate-pulse-soft" style={{ animationDelay: '2s' }} />
+      <Navigation onStart={start} onCounsellor={openCounsellor} />
+      <div className="pt-24 pb-12">
+        <HeroSection onStart={start} onWorks={() => document.getElementById("journey")?.scrollIntoView({ behavior: "smooth" })} />
+        <FeaturesSection />
+      </div>
+      <Footer />
+      <Toaster richColors />
+    </main>
+  );
 }
 
 export default function Home() {
@@ -172,7 +190,6 @@ export default function Home() {
   const quizQuestions = useMemo(() => buildQuiz(activeCareer), [activeCareer]);
   const selectedCounsellor = counsellors.find((item) => item.id === selectedCounsellorId) ?? counsellors[0];
   const currentStepIndex = navItems.findIndex((item) => item.id === step);
-  const profileCompletion = Math.min(100, 45 + (profile.name ? 15 : 0) + Math.min(20, profile.interests.length * 5) + (profile.track !== "Exploring all fields" ? 20 : 0));
   const strongSkills = [...coreSkills].sort((a, b) => effectiveSkills[b] - effectiveSkills[a]).slice(0, 2);
 
   useEffect(() => {
@@ -180,22 +197,25 @@ export default function Home() {
       const raw = localStorage.getItem("figr-nxt-active-demo-v3");
       if (raw) {
         const saved = JSON.parse(raw);
-        if (saved.profile) setProfile(saved.profile);
-        if (saved.answers) setAnswers(saved.answers);
-        if (saved.assessmentDone) setAssessmentDone(saved.assessmentDone);
-        if (saved.selectedCareerId) setSelectedCareerId(saved.selectedCareerId);
-        if (saved.completedModules) setCompletedModules(saved.completedModules);
-        if (saved.studentNotes) setStudentNotes(saved.studentNotes);
-        if (saved.chat) setChat(saved.chat);
-        if (saved.quizAnswers) setQuizAnswers(saved.quizAnswers);
-        if (typeof saved.quizScore === "number") setQuizScore(saved.quizScore);
-        if (saved.bookingStatus) setBookingStatus(saved.bookingStatus);
-        if (saved.selectedCounsellorId) setSelectedCounsellorId(saved.selectedCounsellorId);
-        if (saved.selectedSlot) setSelectedSlot(saved.selectedSlot);
-        if (saved.counsellorFeedback) setCounsellorFeedback(saved.counsellorFeedback);
+        setTimeout(() => {
+          if (saved.profile) setProfile(saved.profile);
+          if (saved.answers) setAnswers(saved.answers);
+          if (saved.assessmentDone) setAssessmentDone(saved.assessmentDone);
+          if (saved.selectedCareerId) setSelectedCareerId(saved.selectedCareerId);
+          if (saved.completedModules) setCompletedModules(saved.completedModules);
+          if (saved.studentNotes) setStudentNotes(saved.studentNotes);
+          if (saved.chat) setChat(saved.chat);
+          if (saved.quizAnswers) setQuizAnswers(saved.quizAnswers);
+          if (saved.quizIndex !== undefined) setQuizIndex(saved.quizIndex);
+          if (saved.prompt) setPrompt(saved.prompt);
+          if (saved.counsellorFeedback) setCounsellorFeedback(saved.counsellorFeedback);
+          if (saved.bookingStatus) setBookingStatus(saved.bookingStatus);
+          if (saved.selectedSlot) setSelectedSlot(saved.selectedSlot);
+          if (saved.selectedCounsellorId) setSelectedCounsellorId(saved.selectedCounsellorId);
+        }, 0);
       }
     } catch { localStorage.removeItem("figr-nxt-active-demo-v3"); }
-    setHydrated(true);
+    setTimeout(() => setHydrated(true), 0);
   }, []);
 
   useEffect(() => {
@@ -270,35 +290,210 @@ export default function Home() {
     { front: "What makes a recommendation trustworthy?", back: "Visible supporting, conflicting and missing evidence plus an honest confidence level." },
   ];
 
-  return <main className="student-shell">
-    <aside className="student-sidebar glass-panel"><Logo compact /><div className="student-mini"><span>{(profile.name || "S").charAt(0)}</span><div><strong>{profile.name || "Student"}</strong><small>{profile.level}</small></div></div><div className="target-mini"><small>Target career</small><strong>{selectedCareerId ? activeCareer.title : "Still exploring"}</strong></div><div className="journey-progress"><span>Journey Progress</span><div>{navItems.map((item, index) => <i key={item.id} className={index <= currentStepIndex ? index === currentStepIndex ? "current" : "done" : ""} />)}</div><small>Step {currentStepIndex + 1} of {navItems.length}</small></div><nav aria-label="Student journey">{navItems.map((item, index) => { const NavIcon = item.icon; return <button key={item.id} onClick={() => setStep(item.id)} className={step === item.id ? "active" : ""}><NavIcon /><span>{item.label}</span><small>{index + 1}</small></button>; })}</nav><div className="sidebar-actions"><button onClick={loadDemoStudent}><UserRound /> Load Demo Student</button><button onClick={resetDemo}><RotateCcw /> Reset Demo</button><button onClick={() => setTechnicalOpen(true)}><Network /> View Technical Flow</button><button onClick={() => setScreen("landing")}><X /> Exit to Landing</button></div></aside>
+  return <main className="min-h-screen bg-[var(--winter-bg)] flex">
+    <Sidebar
+      profile={profile}
+      targetCareerTitle={selectedCareerId ? activeCareer.title : null}
+      navItems={navItems}
+      currentStepIndex={currentStepIndex}
+      step={step}
+      setStep={setStep}
+      loadDemoStudent={loadDemoStudent}
+      resetDemo={resetDemo}
+      setTechnicalOpen={setTechnicalOpen}
+      setScreen={setScreen}
+    />
 
     <section className="student-workspace"><header className="workspace-header glass-panel"><div><h2>{navItems[currentStepIndex].label}</h2><p>Step {currentStepIndex + 1} of {navItems.length} · Career Horizons</p></div><div className="header-actions"><span className="save-status"><Check /> Saved on this device</span>{step !== "handoff" && <Button onClick={() => setStep(navItems[Math.min(navItems.length - 1, currentStepIndex + 1)].id)} className="primary-button">Continue <ChevronRight /></Button>}</div></header><div className="top-progress"><span style={{ width: `${((currentStepIndex + 1) / navItems.length) * 100}%` }} /></div>
 
       <div className="workspace-content">
-        {step === "profile" && <><SectionHeading eyebrow="Step 1 · Student discovery passport" title="Start with broad interests—not a job title" description="A Class 11 student should not need to understand machine learning versus data analytics before receiving guidance. Choose a broad direction or keep exploring." /><section className="profile-summary panel"><div className="completion-ring"><strong>{profileCompletion}%</strong><small>complete</small></div><div><h2>Profile Completion</h2><p>“Your budget can change how you learn, but not what you can become.”</p></div><Button variant="outline" onClick={loadDemoStudent} className="secondary-button"><Sparkles /> Load Demo Student</Button></section><div className="profile-columns"><section className="panel form-card"><h2>Academic Information</h2><div className="form-grid"><label>Student Name<input value={profile.name} onChange={(event) => updateProfile("name", event.target.value)} placeholder="Enter your name" /></label><label>Class / Academic Level<select value={profile.level} onChange={(event) => updateProfile("level", event.target.value)}>{["Class 8", "Class 9", "Class 10", "Class 11", "Class 12", "Undergraduate"].map((item) => <option key={item}>{item}</option>)}</select></label><label>Career direction<select value={profile.track} onChange={(event) => changeTrack(event.target.value as Track)}>{tracks.map((item) => <option key={item}>{item}</option>)}</select><small>This selects a relevant assessment route; it does not lock a career.</small></label><label>Learning Budget<select value={profile.budget} onChange={(event) => updateProfile("budget", event.target.value)}>{["Free resources only", "Up to ₹500 per month", "Up to ₹2,000 per month", "Flexible"].map((item) => <option key={item}>{item}</option>)}</select></label></div><label className="range-label"><span>Weekly Study Hours <strong>{profile.weeklyHours} hrs/week</strong></span><input type="range" min="1" max="15" value={profile.weeklyHours} onChange={(event) => updateProfile("weeklyHours", Number(event.target.value))} aria-label={`Weekly study hours: ${profile.weeklyHours}`} /></label></section><aside className="profile-signal panel"><span className="icon-tile"><Compass /></span><p className="eyebrow">Profile signal</p><h2>{profile.interests.length ? "Ready to explore" : "Add your interests"}</h2><div className="metric-grid"><Metric label="Interest signals" value={`${profile.interests.length}`} /><Metric label="Career paths" value={`${careers.length}`} tone="teal" /></div><p className="principle"><Lightbulb /> Student-friendly by design: first discover a direction, then inspect specialised careers.</p></aside></div><section className="panel interest-panel"><h2>Interest Constellation</h2><p>Select the areas that genuinely spark your curiosity.</p><div className="interest-grid">{interestChoices.map((item) => { const selected = profile.interests.includes(item); return <button key={item} aria-pressed={selected} onClick={() => updateProfile("interests", selected ? profile.interests.filter((interest) => interest !== item) : [...profile.interests, item])} className={selected ? "selected" : ""}>{selected && <Check />}{item}</button>; })}</div></section><section className="panel skill-panel"><div className="panel-heading"><div><h2>Self-Rated Transferable Skills</h2><p>Rate broad strengths now. Career-specific abilities appear after career selection.</p></div><span>0 = new · 10 = confident</span></div><div className="skill-sliders">{coreSkills.map((skill) => <label key={skill}><span>{skill}<strong>{profile.selfRatings[skill]}/10</strong></span><input type="range" min="0" max="10" value={profile.selfRatings[skill]} onChange={(event) => updateProfile("selfRatings", { ...profile.selfRatings, [skill]: Number(event.target.value) })} aria-label={`Self-rating for ${skill}: ${profile.selfRatings[skill]} out of 10`} /></label>)}</div><Button onClick={() => setStep("assessment")} className="primary-button">Start My Assessment <ArrowRight /></Button></section></>}
+        {step === "profile" && (
+          <ProfileStep
+            profile={profile}
+            updateProfile={updateProfile}
+            changeTrack={changeTrack}
+            tracks={tracks}
+            interestChoices={interestChoices}
+            coreSkills={coreSkills}
+            careersCount={careers.length}
+            loadDemoStudent={loadDemoStudent}
+            setStep={setStep}
+          />
+        )}
 
-        {step === "assessment" && <><SectionHeading eyebrow="Step 2 · Relevant questions" title="A different assessment for each direction" description={`This ${profile.track.toLowerCase()} route uses age-appropriate situations instead of giving every student the same programming and statistics questions.`} /><div className="assessment-route panel"><span><Sparkles /> Active question set</span><strong>{profile.track}</strong><small>{profile.level} · {questions.length} evidence signals</small></div><div className="assessment-meta"><span>Question {questionIndex + 1} of {questions.length}</span><span>{answeredCount}/{questions.length} answered</span></div><Progress value={(answeredCount / questions.length) * 100} className="assessment-progress" /><section className="panel assessment-card"><div className="question-label"><span>{currentQuestion.skill}</span><small>{currentQuestion.difficulty}</small></div><h2>{currentQuestion.prompt}</h2><div className="answer-list">{currentQuestion.options.map((option, index) => <button key={option} onClick={() => setAnswers((current) => ({ ...current, [currentQuestion.id]: index }))} className={answers[currentQuestion.id] === index ? "selected" : ""}><span>{String.fromCharCode(65 + index)}</span><strong>{option}</strong>{answers[currentQuestion.id] === index && <Check />}</button>)}</div><details><summary>Why are we asking this?</summary><p>This question gathers evidence about {currentQuestion.skill.toLowerCase()}. It is combined with your self-rating; it does not decide your career by itself.</p></details></section><div className="assessment-navigation"><Button variant="outline" disabled={questionIndex === 0} onClick={() => setQuestionIndex((index) => index - 1)} className="secondary-button">Previous</Button><div>{questions.map((question, index) => <button key={question.id} onClick={() => setQuestionIndex(index)} aria-label={`Go to question ${index + 1}`} className={`${index === questionIndex ? "current" : ""} ${answers[question.id] !== undefined ? "done" : ""}`}>{index + 1}</button>)}</div>{questionIndex < questions.length - 1 ? <Button onClick={() => setQuestionIndex((index) => index + 1)} className="primary-button">Next <ChevronRight /></Button> : <Button onClick={finishAssessment} className="primary-button">Analyze Assessment <Sparkles /></Button>}</div></>}
+        {step === "assessment" && (
+          <AssessmentStep
+            profile={profile}
+            questions={questions}
+            questionIndex={questionIndex}
+            setQuestionIndex={setQuestionIndex}
+            answeredCount={answeredCount}
+            answers={answers}
+            setAnswers={setAnswers}
+            finishAssessment={finishAssessment}
+          />
+        )}
 
-        {step === "analysis" && (!assessmentDone ? <EmptyState icon={BarChart3} title="No analysis yet" text="Complete the active assessment to calculate demonstrated skills and readiness." action="Go to Assessment" onAction={() => setStep("assessment")} /> : <><SectionHeading eyebrow="Step 3 · Evidence, not guesswork" title="Skill Analysis" description="Self-reported confidence and demonstrated performance stay separate before being blended into an effective skill score." /><div className="metric-grid four"><Metric label="Overall readiness" value={`${Math.round(coreSkills.reduce((sum, skill) => sum + effectiveSkills[skill], 0) / coreSkills.length)}/10`} /><Metric label="Evidence confidence" value={evidenceConfidence} tone="teal" /><Metric label="Interest signals" value={`${profile.interests.length}`} tone="amber" /><Metric label="Assessment score" value={`${currentAssessmentScore}%`} tone="coral" /></div><section className="insight-card panel"><span className="icon-tile coral"><Lightbulb /></span><div><p className="eyebrow coral-text">Personal insight</p><h2>Your {strongSkills.join(" and ").toLowerCase()} evidence is currently strongest.</h2><p>{weakest.skill} needs the most additional evidence for the leading path. This is a learning priority—not a permanent label.</p></div></section><div className="analysis-grid"><section className="panel breakdown-card"><div className="panel-heading"><div><h2>Skill Breakdown</h2><p>Effective skill = 45% self-rating + 55% assessment performance</p></div></div>{coreSkills.map((skill) => <div className="breakdown-row" key={skill}><div><strong>{skill}</strong><small>Self: {profile.selfRatings[skill]}/10 · Effective: {effectiveSkills[skill]}/10</small></div><div><span style={{ width: `${effectiveSkills[skill] * 10}%` }} /></div><b>{effectiveSkills[skill]}/10</b></div>)}</section><aside className="panel evidence-card"><h2>Evidence Confidence</h2><div className="confidence-visual"><strong>{evidenceConfidence}</strong><Progress value={(answeredCount / questions.length) * 100} /></div><h3>Strong abilities</h3><div className="tag-list positive">{strongSkills.map((skill) => <span key={skill}>{skill}</span>)}</div><h3>More evidence needed</h3><div className="tag-list negative">{gaps.slice(0, 2).map((gap) => <span key={gap.skill}>{gap.skill}</span>)}</div><Button onClick={() => setStep("careers")} className="primary-button">View Career Matches <ArrowRight /></Button></aside></div></>)}
+        {step === "analysis" && (
+          <AnalysisStep
+            assessmentDone={assessmentDone}
+            setStep={setStep}
+            coreSkills={coreSkills}
+            effectiveSkills={effectiveSkills}
+            evidenceConfidence={evidenceConfidence}
+            interestsCount={profile.interests.length}
+            currentAssessmentScore={currentAssessmentScore}
+            strongSkills={strongSkills}
+            weakest={weakest}
+            selfRatings={profile.selfRatings}
+            answeredCount={answeredCount}
+            questionsLength={questions.length}
+            gaps={gaps}
+          />
+        )}
 
-        {step === "careers" && (!assessmentDone ? <EmptyState icon={Compass} title="Complete the assessment first" text="Career rankings need demonstrated evidence before they can be explained responsibly." action="Go to Assessment" onAction={() => setStep("assessment")} /> : <><SectionHeading eyebrow="Step 4 · Transparent career fit" title="Career Navigator" description="Twenty-one technical and non-technical paths are ranked using 45% skill evidence, 35% requirement fit and 20% interest alignment." /><div className="career-tools panel"><label><Search /><input value={careerSearch} onChange={(event) => setCareerSearch(event.target.value)} placeholder={`Search ${careers.length} careers`} aria-label="Search careers" /></label><div>{["All", ...Array.from(new Set(careers.map((item) => item.category)))].map((category) => <button key={category} onClick={() => setCareerCategory(category)} className={careerCategory === category ? "active" : ""}>{category === "All" ? category : categoryShort[category as Career["category"]]}</button>)}</div></div><div className="career-grid">{filteredCareers.map((career, index) => { const CareerIcon = categoryIcons[career.category]; const comparedNow = compareIds.includes(career.id); return <article key={career.id} className={`career-card panel ${index === 0 ? "featured" : ""}`}><div className="career-top"><span className="career-symbol" style={{ color: career.color, backgroundColor: `${career.color}16` }}><CareerIcon /></span><div><small>{career.category}</small><h2>{career.title}</h2></div><ScoreRing value={career.match} /></div><p>{career.summary}</p><div className="confidence-row"><span>{evidenceConfidence} evidence confidence</span><span>{career.interestAlignment}% interest alignment</span></div><div className="evidence-columns"><div><small>Supporting evidence</small><div className="tag-list positive">{career.supporting.length ? career.supporting.slice(0, 3).map((skill) => <span key={skill}>{skill}</span>) : <span>Build more evidence</span>}</div></div><div><small>Missing evidence</small><div className="tag-list negative">{career.missing.slice(0, 3).map((skill) => <span key={skill}>{skill}</span>)}</div></div></div><div className="career-actions"><Button onClick={() => chooseCareer(career.id)} className="primary-button">Select and Discuss <UsersRound /></Button><Button variant="outline" onClick={() => toggleCompare(career.id)} className="secondary-button">{comparedNow ? <Check /> : <Compass />}{comparedNow ? "Added" : "Compare"}</Button></div></article>; })}</div>{compared.length === 2 && <section className="comparison panel"><div className="panel-heading"><div><p className="eyebrow">Side-by-side evidence</p><h2>Career Comparison</h2></div><button onClick={() => setCompareIds([])}>Clear</button></div><div className="comparison-grid">{compared.map((career) => <div key={career.id}><h3>{career.title}</h3><Metric label="Transparent fit" value={`${career.match}%`} /><Metric label="Readiness" value={`${career.readiness}%`} tone="teal" /><Metric label="Top gap" value={career.missing[0] || "More evidence"} tone="coral" /><p><strong>Trial:</strong> {career.trialTask}</p></div>)}</div></section>}</>)}
+        {step === "careers" && (
+          <CareersStep
+            assessmentDone={assessmentDone}
+            setStep={setStep}
+            careersLength={careers.length}
+            careerSearch={careerSearch}
+            setCareerSearch={setCareerSearch}
+            careerCategory={careerCategory}
+            setCareerCategory={setCareerCategory}
+            filteredCareers={filteredCareers}
+            compareIds={compareIds}
+            toggleCompare={toggleCompare}
+            chooseCareer={chooseCareer}
+            evidenceConfidence={evidenceConfidence}
+            compared={compared}
+            setCompareIds={setCompareIds}
+            categories={["All", ...Array.from(new Set(careers.map((item) => item.category)))]}
+          />
+        )}
 
-        {step === "counselling" && (!selectedCareerId ? <EmptyState icon={UsersRound} title="No career selected" text="Choose a career to prepare a human-readable evidence packet and counsellor discussion." action="Go to Careers" onAction={() => setStep("careers")} /> : <><SectionHeading eyebrow="Step 5 · Human judgement" title="Human Career Counselling" description="Discuss the selected career with a fictional demonstration counsellor before building the roadmap—or continue without booking." /><section className="selected-career panel"><span className="icon-tile coral"><UsersRound /></span><div><h2>{activeCareer.title}</h2><p>{activeCareer.summary}</p><div className="tag-list"><span>{activeResult.match}% match</span><span>{evidenceConfidence} confidence</span></div></div></section><div className="counselling-evidence"><section className="panel"><h3>Supporting evidence</h3><div className="tag-list positive">{activeResult.supporting.length ? activeResult.supporting.map((skill) => <span key={skill}>{skill}</span>) : <span>Still collecting evidence</span>}</div><h3>Conflicting or missing evidence</h3><div className="tag-list negative">{activeResult.missing.map((skill) => <span key={skill}>{skill}</span>)}</div></section><section className="panel"><h3>Recommendation confidence</h3>{[["Overall match", activeResult.match], ["Interest alignment", activeResult.interestAlignment], ["Readiness", activeResult.readiness]].map(([label, value]) => <div className="confidence-bar" key={label as string}><span>{label}<strong>{value}%</strong></span><div><i style={{ width: `${value}%` }} /></div></div>)}</section></div><section className="panel counsellor-questions"><h2>Questions to discuss with your counsellor</h2>{[`Is ${activeCareer.title} realistic given my current ${weakest.skill} gap?`, `What should I prioritise first: ${weakest.skill} or ${gaps[1].skill}?`, `How does this compare with ${rankedCareers.find((item) => item.id !== activeCareer.id)?.title}?`, `Which ${profile.budget.toLowerCase()} resources fit my weekly schedule?`].map((question, index) => <p key={question}><strong>Q{index + 1}.</strong>{question}</p>)}</section><section className="evidence-packet panel"><header><FileText /><h2>Counsellor Evidence Packet</h2><span>Auditable summary</span></header><div>{[["Student", `${profile.name || "Student"}, ${profile.level}`], ["Selected career", activeCareer.title], ["Alternative path", rankedCareers.find((item) => item.id !== activeCareer.id)?.title || "—"], ["Strongest evidence", strongSkills.join(", ")], ["Highest gap", `${weakest.skill} (${weakest.gap}/10)`], ["Interests", profile.interests.join(", ") || "Not provided"], ["Missing evidence", activeResult.missing.join(", ") || "None"], ["Suggested action", activeCareer.trialTask]].map(([label, value]) => <p key={label}><small>{label}</small><strong>{value}</strong></p>)}</div><footer><Button variant="outline" onClick={() => window.print()} className="secondary-button"><Download /> Print / Save Summary</Button><Button variant="outline" onClick={() => toast.success("Evidence packet marked as shared in the prototype.")} className="secondary-button"><Send /> Share with Counsellor</Button></footer></section><section className="counsellor-booking"><div><h2>Recommended Counsellors</h2>{counsellors.map((counsellor) => <button key={counsellor.id} onClick={() => { setSelectedCounsellorId(counsellor.id); setBookingStatus("idle"); }} className={`counsellor-card panel ${selectedCounsellorId === counsellor.id ? "selected" : ""}`}><span>{counsellor.initials}</span><div><div><strong>{counsellor.name}</strong><small>Demonstration counsellor profile</small></div><b>{counsellor.role}</b><p>{counsellor.focus}</p><em>{counsellor.languages} · {counsellor.experience} · {counsellor.rating}</em></div>{selectedCounsellorId === counsellor.id && <Check />}</button>)}</div><aside className="booking-panel panel"><p className="eyebrow coral-text">Video consultation</p><h2>25-minute guidance call</h2><p>Simulated booking for prototype demonstration. No camera or microphone permission is requested.</p><div className="slot-list">{["Tomorrow · 10:00 AM", "Tomorrow · 3:00 PM", "In 2 days · 11:30 AM", "In 3 days · 4:00 PM"].map((slot) => <button key={slot} className={selectedSlot === slot ? "selected" : ""} onClick={() => { setSelectedSlot(slot); setBookingStatus("idle"); }}><CalendarDays />{slot}{selectedSlot === slot && <Check />}</button>)}</div><Button onClick={() => setBookingStatus("reserved")} className="coral-button"><Video /> Book Video Consultation</Button>{bookingStatus !== "idle" && <div className="booking-confirmed"><Check /><div><strong>Demo session reserved</strong><small>{selectedCounsellor.name} · {selectedSlot}</small></div></div>}</aside></section>{bookingStatus !== "idle" && <section className="video-demo panel"><div className="video-stage"><div><span>{profile.name.charAt(0) || "S"}</span><small>{profile.name || "Student"}</small></div><div><span>{selectedCounsellor.initials}</span><small>{selectedCounsellor.name}</small></div></div><div className="video-controls"><button onClick={() => setMicOn((value) => !value)} aria-label={micOn ? "Mute simulated microphone" : "Unmute simulated microphone"}>{micOn ? <Mic /> : <MicOff />}</button><button onClick={() => setVideoOn((value) => !value)} aria-label={videoOn ? "Turn off simulated camera" : "Turn on simulated camera"}>{videoOn ? <Video /> : <VideoOff />}</button><Button onClick={() => setBookingStatus((value) => value === "live" ? "reserved" : "live")} className="coral-button">{bookingStatus === "live" ? "End Demo Session" : "Start Demo Consultation"}</Button></div><p>{bookingStatus === "live" ? "Demo consultation in progress · simulated interface" : "Ready to preview the simulated consultation"}</p></section>}<div className="continue-row"><Button variant="outline" onClick={() => setStep("gaps")} className="secondary-button">Continue Without Booking</Button><Button onClick={() => setStep("gaps")} className="primary-button">Continue to Skill Gaps <ArrowRight /></Button></div></>)}
+        {step === "counselling" && (
+          <CounsellingStep
+            selectedCareerId={selectedCareerId}
+            setStep={setStep}
+            activeCareer={activeCareer!}
+            activeResult={activeResult}
+            evidenceConfidence={evidenceConfidence}
+            weakest={weakest!}
+            gaps={gaps}
+            rankedCareers={rankedCareers}
+            profile={profile}
+            strongSkills={strongSkills}
+            counsellors={counsellors}
+            selectedCounsellorId={selectedCounsellorId}
+            setSelectedCounsellorId={setSelectedCounsellorId}
+            bookingStatus={bookingStatus}
+            setBookingStatus={setBookingStatus}
+            setScreen={setScreen}
+            selectedSlot={selectedSlot}
+            setSelectedSlot={setSelectedSlot}
+            selectedCounsellor={selectedCounsellor}
+            micOn={micOn}
+            setMicOn={setMicOn}
+            videoOn={videoOn}
+            setVideoOn={setVideoOn}
+          />
+        )}
 
-        {step === "gaps" && (!selectedCareerId ? <EmptyState icon={Target} title="No skill gaps yet" text="Select a career so its requirements can be compared with your evidence." action="Go to Careers" onAction={() => setStep("careers")} /> : <><SectionHeading eyebrow="Step 6 · Compare, don't label" title="Skill Gap Analysis" description={`Bridge from where you are now to what ${activeCareer.title} requires. Values are rounded and every gap has a learning action.`} /><div className="gap-summary"><Metric label="Current average" value={`${round1(coreSkills.reduce((sum, skill) => sum + effectiveSkills[skill], 0) / coreSkills.length)}/10`} /><div className="bridge"><span>Where you are now</span><i /><ArrowRight /><i /><span>Career requirements</span></div><Metric label="Required average" value={`${round1(coreSkills.reduce((sum, skill) => sum + activeCareer.requirements[skill], 0) / coreSkills.length)}/10`} tone="teal" /></div><section className="highest-gap panel"><span className="icon-tile coral"><Target /></span><div><p className="eyebrow coral-text">Highest-impact gap</p><h2>{weakest.skill}</h2><p>Current {weakest.current}/10 · Required {weakest.required}/10 · Gap {weakest.gap}/10</p></div><div><small>Recommended first action</small><strong>{roadmap[0].objective}</strong></div></section><section className="panel gap-list"><h2>Topics, subtopics and evidence gaps</h2>{gaps.map((gap, index) => <details key={gap.skill} open={index === 0}><summary><span>{gap.skill}<small>{activeCareer.focusSkills[index % activeCareer.focusSkills.length]}</small></span><span>{gap.current}/10 → {gap.required}/10</span><b className={gap.gap >= 3 ? "critical" : gap.gap > 0 ? "build" : "ready"}>{gap.gap >= 3 ? "Critical gap" : gap.gap > 0 ? "Build evidence" : "Career ready"}</b></summary><div className="gap-details"><p><strong>Why it matters:</strong> {gap.skill} supports {activeCareer.trialTask.toLowerCase()}</p><p><strong>Subtopics:</strong> {activeCareer.focusSkills.join(" · ")}</p><div className="gap-meter"><i style={{ width: `${gap.current * 10}%` }} /><span style={{ left: `${gap.required * 10}%` }} /></div><div className="resource-links">{verifiedResources.slice(0, 3).map((resource) => <a key={resource.provider} href={resource.url} target="_blank" rel="noreferrer"><BookOpen />{resource.provider}<small>{resource.type} · {resource.cost}</small></a>)}</div></div></details>)}</section><Button onClick={() => setStep("roadmap")} className="primary-button page-next">Build Personalized Roadmap <Route /></Button></>)}
+        {step === "gaps" && (
+          <GapsStep
+            selectedCareerId={selectedCareerId}
+            setStep={setStep}
+            activeCareer={activeCareer!}
+            coreSkills={coreSkills}
+            effectiveSkills={effectiveSkills}
+            weakest={weakest!}
+            gaps={gaps}
+            roadmap={roadmap}
+            verifiedResources={verifiedResources}
+            round1={round1}
+          />
+        )}
 
-        {step === "roadmap" && (!selectedCareerId ? <EmptyState icon={Route} title="No roadmap yet" text="Select a career to generate a career-specific evidence-building path." action="Go to Careers" onAction={() => setStep("careers")} /> : <><SectionHeading eyebrow="Step 7 · Try the real work" title={`${activeCareer.title} Roadmap`} description={`A 12-week visual journey shaped by the ${weakest.skill.toLowerCase()} gap, ${profile.weeklyHours} study hours per week and ${profile.budget.toLowerCase()}.`} /><div className="roadmap-layout"><section className="panel roadmap-map"><div className="roadmap-head"><div><h2>Evidence-building route</h2><p>Start → Foundation → Practice → Project → Review</p></div><span>{completedModules.length}/{roadmap.length} complete</span></div><div className="route-path">{roadmap.map((module, index) => { const done = completedModules.includes(index); const locked = index > 0 && !completedModules.includes(index - 1); return <article key={module.title} className={`${done ? "done" : ""} ${locked ? "locked" : ""}`}><button onClick={() => completeModule(index)} aria-label={`${done ? "Mark incomplete" : "Complete"} ${module.title}`}>{locked ? <LockKeyhole /> : done ? <Check /> : index === roadmap.length - 1 ? <Trophy /> : <span>{index + 1}</span>}</button><div><div><small>{module.weeks}</small><span>{module.type}</span><em>{profile.budget === "Free resources only" ? "FREE" : "BUDGET FIT"}</em></div><h3>{module.title}</h3><p>{module.objective}</p><footer><BookOpen />{module.resource}<b>{module.duration}</b></footer></div></article>; })}</div></section><aside><section className="panel why-roadmap"><p className="eyebrow">Why this plan</p><h2>Evidence before commitment</h2><p>It lets {profile.name.split(" ")[0] || "the student"} experience the real work before choosing a course or stream.</p><div><strong>Budget changes delivery—not potential.</strong><span>Career scores stay unchanged while resource suggestions adapt.</span></div></section><section className="panel roadmap-actions"><h3>Next checkpoint</h3><p>{activeCareer.checkpoint.prompt}</p><Button onClick={() => setStep("learning")} className="primary-button">Open Learning Hub <BookOpen /></Button><Button variant="outline" onClick={() => setStep("quiz")} className="secondary-button">Go to Checkpoint <ChevronRight /></Button></section></aside></div></>)}
+        {step === "roadmap" && (
+          <RoadmapStep
+            selectedCareerId={selectedCareerId}
+            setStep={setStep}
+            activeCareer={activeCareer!}
+            weakest={weakest!}
+            profile={profile}
+            completedModules={completedModules}
+            roadmap={roadmap}
+            completeModule={completeModule}
+          />
+        )}
 
-        {step === "learning" && <><SectionHeading eyebrow="Step 8 · Multiple ways to learn" title="Learning Hub" description={`Use notes, a printable study brief, flashcards, verified lecture catalogs and practice for ${activeCareer.title}.`} /><div className="learning-tabs" role="tablist">{[["notes", NotebookPen, "Notes"], ["brief", FileText, "Study Brief"], ["cards", RefreshCw, "Smart Cards"], ["lectures", Play, "Lectures"], ["practice", Target, "Practice"]].map(([id, TabIcon, label]) => { const I = TabIcon as Icon; return <button role="tab" aria-selected={learningTab === id} key={id as string} onClick={() => setLearningTab(id as typeof learningTab)} className={learningTab === id ? "active" : ""}><I />{label as string}</button>; })}</div><section className="panel learning-surface">{learningTab === "notes" && <div className="notes-view"><div><p className="eyebrow">Personal notes</p><h2>{roadmap[0].title}</h2><p>Write what you understood, what remains confusing and the question you want to ask next.</p></div><Textarea value={studentNotes} onChange={(event) => setStudentNotes(event.target.value)} placeholder="Write your learning notes…" aria-label="Learning notes" /><span><Check /> Saved on this device</span></div>}{learningTab === "brief" && <article className="study-brief"><p className="eyebrow">Printable learning brief</p><h2>{roadmap[0].title}</h2><h3>Why it matters</h3><p>{roadmap[0].objective}</p><h3>Try this</h3><p>{activeCareer.trialTask}</p><h3>Reflection prompts</h3><ul><li>What part felt natural?</li><li>What evidence would increase confidence?</li><li>What should a counsellor help you compare?</li></ul><Button onClick={() => window.print()} variant="outline" className="secondary-button"><Download /> Print / Save as PDF</Button></article>}{learningTab === "cards" && <div className="flashcard-view"><div className={`flashcard ${flashFlipped ? "flipped" : ""}`} onClick={() => setFlashFlipped((value) => !value)} role="button" tabIndex={0} onKeyDown={(event) => event.key === "Enter" && setFlashFlipped((value) => !value)}><small>{flashFlipped ? "Answer" : "Question"}</small><h2>{flashFlipped ? flashcards[flashIndex].back : flashcards[flashIndex].front}</h2><span>Click or press Enter to flip</span></div><div className="flash-controls"><Button variant="outline" onClick={() => { setFlashIndex((index) => (index + flashcards.length - 1) % flashcards.length); setFlashFlipped(false); }} className="secondary-button">Previous</Button><span>{flashIndex + 1}/{flashcards.length}</span><Button variant="outline" onClick={() => { setKnownCards((current) => current.includes(flashIndex) ? current.filter((item) => item !== flashIndex) : [...current, flashIndex]); toast.success(knownCards.includes(flashIndex) ? "Marked for revision" : "Marked as known"); }} className="secondary-button">{knownCards.includes(flashIndex) ? "Revise again" : "Mark known"}</Button><Button onClick={() => { setFlashIndex((index) => (index + 1) % flashcards.length); setFlashFlipped(false); }} className="primary-button">Next</Button></div></div>}{learningTab === "lectures" && <div className="lecture-grid">{verifiedResources.map((resource) => <a key={resource.provider} href={resource.url} target="_blank" rel="noreferrer"><span><Play /></span><div><small>{resource.type}</small><h3>{resource.provider}</h3><p>Open the verified provider catalog and choose an age-appropriate module for {activeCareer.focusSkills[0]}.</p><b>{resource.cost} · Verified provider homepage</b></div><ArrowRight /></a>)}</div>}{learningTab === "practice" && <div className="practice-view"><span className="icon-tile coral"><Target /></span><p className="eyebrow coral-text">10-minute career trial</p><h2>{activeCareer.trialTask}</h2><p>Do the smallest useful version. Then record one observation, one difficulty and one question.</p><Button onClick={() => toast.success("Practice task started. A 10-minute timer would connect here in production.")} className="coral-button"><Play /> Start Practice</Button></div>}</section></>}
+        {step === "learning" && (
+          <LearningStep
+            activeCareer={activeCareer!}
+            roadmap={roadmap}
+            flashcards={flashcards}
+            verifiedResources={verifiedResources}
+          />
+        )}
 
-        {step === "tutor" && <><SectionHeading eyebrow="Step 9 · Context-aware support" title="Learning Companion" description="This reliable prototype uses deterministic context-aware guidance. A backend teammate can later replace the same service contract with a live LLM." /><div className="tutor-layout"><aside><section className="panel tutor-context"><div className="fallback-status"><span /><strong>Guided response mode</strong><small>Live AI not configured</small></div><p className="eyebrow">Tutor Context</p>{[[UserRound, "Student", profile.name || "Student"], [Compass, "Target career", activeCareer.title], [Target, "Weakest skill", `${weakest.skill} · ${weakest.current}/10`], [BookOpen, "Current module", roadmap.find((_, index) => !completedModules.includes(index))?.title || "Review"], [Gauge, "Latest quiz", quizScore === null ? "Not taken" : `${quizScore}%`]].map(([ContextIcon, label, value]) => { const I = ContextIcon as Icon; return <div className="context-row" key={label as string}><I /><span><small>{label as string}</small><strong>{value as string}</strong></span></div>; })}</section><section className="panel quick-prompts"><h3>Quick prompts</h3>{["Explain this simply", "Give me a 10-minute practice task", "Why is this skill needed for my career?", "What should I learn next?", "What should I ask a counsellor?", "Explain my quiz mistake"].map((item) => <button key={item} onClick={() => sendMessage(item)}><MessageSquareText />{item}</button>)}</section></aside><section className="panel chat-panel"><header><span><GraduationCap /></span><div><h2>FIGR Learning Companion</h2><p>Uses the visible student context</p></div></header><div className="messages">{chat.map((message, index) => <div key={`${message.from}-${index}`} className={message.from}><span>{message.from === "guide" ? <GraduationCap /> : <UserRound />}</span><p>{message.text}</p></div>)}</div><footer><Textarea value={prompt} onChange={(event) => setPrompt(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); sendMessage(); } }} placeholder="Ask about your career, gap or next task…" aria-label="Tutor message" /><Button onClick={() => sendMessage()} aria-label="Send message" className="primary-button"><Send /></Button></footer></section></div></>}
+        {step === "tutor" && (
+          <TutorStep
+            profile={profile}
+            activeCareer={activeCareer!}
+            weakest={weakest!}
+            roadmap={roadmap}
+            completedModules={completedModules}
+            quizScore={quizScore}
+            sendMessage={sendMessage}
+            chat={chat}
+            prompt={prompt}
+            setPrompt={setPrompt}
+          />
+        )}
 
-        {step === "quiz" && (!selectedCareerId ? <EmptyState icon={Gauge} title="No checkpoint available" text="Select a career to open its career-specific checkpoint." action="Go to Careers" onAction={() => setStep("careers")} /> : <><SectionHeading eyebrow="Step 10 · Mastery evidence" title={`${activeCareer.title} Checkpoint`} description="Score 60% or above to unlock the next milestone. A lower result creates a visible recovery branch." /><div className="quiz-toolbar panel"><span>{Object.keys(quizAnswers).length}/{quizQuestions.length} answered</span><Button variant="outline" onClick={loadWeakQuiz} className="secondary-button"><WandSparkles /> Load Judge-Ready Weak Result</Button></div><section className="panel assessment-card"><div className="question-label"><span>{quizQuestions[quizIndex].skill}</span><small>{quizQuestions[quizIndex].difficulty}</small></div><h2>{quizQuestions[quizIndex].prompt}</h2><div className="answer-list">{quizQuestions[quizIndex].options.map((option, index) => <button key={option} onClick={() => setQuizAnswers((current) => ({ ...current, [quizQuestions[quizIndex].id]: index }))} className={quizAnswers[quizQuestions[quizIndex].id] === index ? "selected" : ""}><span>{String.fromCharCode(65 + index)}</span><strong>{option}</strong>{quizAnswers[quizQuestions[quizIndex].id] === index && <Check />}</button>)}</div></section><div className="assessment-navigation"><Button variant="outline" disabled={quizIndex === 0} onClick={() => setQuizIndex((index) => index - 1)} className="secondary-button">Previous</Button><div>{quizQuestions.map((question, index) => <button key={question.id} onClick={() => setQuizIndex(index)} className={`${index === quizIndex ? "current" : ""} ${quizAnswers[question.id] !== undefined ? "done" : ""}`}>{index + 1}</button>)}</div>{quizIndex < quizQuestions.length - 1 ? <Button onClick={() => setQuizIndex((index) => index + 1)} className="primary-button">Next <ChevronRight /></Button> : <Button onClick={submitQuiz} className="primary-button">Submit Checkpoint <ArrowRight /></Button>}</div></>)}
+        {step === "quiz" && (
+          <QuizStep
+            selectedCareerId={selectedCareerId}
+            setStep={setStep}
+            activeCareer={activeCareer!}
+            quizAnswers={quizAnswers}
+            quizQuestions={quizQuestions}
+            loadWeakQuiz={loadWeakQuiz}
+            quizIndex={quizIndex}
+            setQuizAnswers={setQuizAnswers}
+            setQuizIndex={setQuizIndex}
+            submitQuiz={submitQuiz}
+          />
+        )}
 
-        {step === "adaptation" && (quizScore === null ? <EmptyState icon={RefreshCw} title="No adaptation yet" text="Take the checkpoint to give the roadmap new evidence." action="Go to Quiz" onAction={() => setStep("quiz")} /> : <><SectionHeading eyebrow="Step 11 · Explainable adaptation" title="Your evidence changed the plan." description={`The ${quizScore}% checkpoint result visibly changes the route instead of only changing a notification.`} /><div className="adapt-trigger panel"><span className={`icon-tile ${quizScore < 60 ? "coral" : "teal"}`}>{quizScore < 60 ? <CircleAlert /> : <Trophy />}</span><div><small>Checkpoint evidence</small><h2>{quizScore}% · {quizScore >= 60 ? "Mastery demonstrated" : "Recovery needed"}</h2><p>{quizScore >= 60 ? "The next learning milestone is now unlocked." : `The result exposed uncertainty in ${weakest.skill}, so a focused recovery loop was added.`}</p></div></div><div className="adaptation-compare"><section className="panel"><p className="eyebrow">Original plan</p><div className="mini-route"><span>{roadmap[0].title}</span><ArrowRight /><span>{roadmap[1].title}</span><ArrowRight /><span>{roadmap[2].title}</span></div></section><section className="panel adapted"><p className="eyebrow coral-text">Adapted plan</p>{quizScore < 60 ? <div className="mini-route wrap"><span>{roadmap[0].title}</span><ArrowRight /><span className="recovery">{weakest.skill} revision · 20 min</span><ArrowRight /><span className="recovery">Targeted practice</span><ArrowRight /><span className="recovery">Reassessment</span><ArrowRight /><span>{roadmap[1].title}</span></div> : <div className="mini-route"><span className="complete"><Check /> {roadmap[0].title}</span><ArrowRight /><span className="unlocked">{roadmap[1].title} · unlocked</span></div>}</section></div><section className="panel why-change"><h2>Why did FIGR NXT change my roadmap?</h2><p>{quizScore < 60 ? `Your checkpoint performance revealed difficulty with the current ${weakest.skill.toLowerCase()} evidence. The engine inserted one revision, guided practice and a reassessment before advanced work.` : "You demonstrated sufficient mastery, so the next learning milestone was unlocked and the progress marker moved forward."}</p><Button onClick={() => setStep("handoff")} className="primary-button">View Counsellor Handoff <UsersRound /></Button></section></>)}
+        {step === "adaptation" && (
+          <AdaptationStep
+            quizScore={quizScore}
+            setStep={setStep}
+            weakest={weakest!}
+            roadmap={roadmap}
+          />
+        )}
 
-        {step === "handoff" && (!selectedCareerId ? <EmptyState icon={CalendarDays} title="Handoff not ready" text="Complete career selection to create a counsellor evidence brief." action="Go to Careers" onAction={() => setStep("careers")} /> : <><SectionHeading eyebrow="Step 12 · Human review" title="Counsellor Handoff" description="A concise final brief helps the counsellor understand the student within seconds and continue the evidence loop." /><section className="handoff-hero panel"><div><p className="eyebrow">Student case</p><h2>{profile.name || "Student"}</h2><p>{profile.level} · {activeCareer.title}</p></div><ScoreRing value={activeResult.match} label="fit" /><div><small>Evidence confidence</small><strong>{evidenceConfidence}</strong><small>Roadmap progress</small><strong>{completedModules.length}/{roadmap.length} milestones</strong></div></section><div className="handoff-grid"><section className="panel"><h2>Readiness summary</h2>{gaps.slice(0, 4).map((gap) => <div className="handoff-gap" key={gap.skill}><span><strong>{gap.skill}</strong><small>{gap.current}/10 → {gap.required}/10</small></span><b>{gap.gap >= 3 ? "Critical" : gap.gap > 0 ? "Improvement" : "Ready"}</b></div>)}<Button variant="outline" onClick={() => window.print()} className="secondary-button"><Download /> Print Evidence Brief</Button></section><section className="panel"><h2>Human mentor note</h2>{counsellorFeedback ? <blockquote>{counsellorFeedback}<footer>— {selectedCounsellor.name}, demonstration profile</footer></blockquote> : <div className="no-feedback"><MessageSquareText /><p>No mentor note yet. Open the counsellor portal to add one and show the full feedback loop.</p><Button onClick={() => setScreen("counsellor")} className="coral-button">Open Counsellor Portal</Button></div>}<div className="next-action"><small>Recommended next action</small><strong>{quizScore !== null && quizScore < 60 ? `${weakest.skill} recovery lesson and reassessment` : activeCareer.trialTask}</strong></div></section></div><section className="final-story panel"><Sparkles /><div><h2>Discover → Assess → Compare → Discuss → Learn → Adapt</h2><p>FIGR does not pretend one score predicts a student's future. It gathers evidence, makes uncertainty visible and brings a human counsellor into the decision.</p></div></section></>)}
+        {step === "handoff" && (
+          <HandoffStep
+            selectedCareerId={selectedCareerId}
+            setStep={setStep}
+            activeCareer={activeCareer!}
+            profile={profile}
+            activeResult={activeResult}
+            evidenceConfidence={evidenceConfidence}
+            completedModules={completedModules}
+            roadmap={roadmap}
+            gaps={gaps}
+            counsellorFeedback={counsellorFeedback}
+            selectedCounsellor={selectedCounsellor}
+            quizScore={quizScore}
+            weakest={weakest!}
+            setScreen={setScreen}
+          />
+        )}
       </div>
     </section>
 

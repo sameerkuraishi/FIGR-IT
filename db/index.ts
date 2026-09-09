@@ -1,13 +1,14 @@
 import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/d1";
+import type { D1Database } from "@cloudflare/workers-types";
 import * as schema from "./schema";
 
 export function getDb() {
-  if (!env.DB) {
-    throw new Error(
-      "Cloudflare D1 binding `DB` is unavailable. Set the `d1` field in .openai/hosting.json to `DB` or let your control plane inject the real binding values before using the database."
-    );
+  const workerEnv = env as unknown as { DB?: D1Database };
+  const db = workerEnv.DB;
+  if (!db) {
+    throw new Error("D1 Database not bound to env.DB");
   }
 
-  return drizzle(env.DB, { schema });
+  return drizzle(db, { schema });
 }

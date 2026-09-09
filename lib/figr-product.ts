@@ -6,6 +6,56 @@ export type CoreSkill =
   | "Organization"
   | "Practical";
 
+export type StudentStep =
+  | "profile"
+  | "assessment"
+  | "analysis"
+  | "careers"
+  | "counselling"
+  | "gaps"
+  | "roadmap"
+  | "learning"
+  | "tutor"
+  | "quiz"
+  | "adaptation"
+  | "handoff";
+
+export type ChatMessage = { from: "student" | "guide"; text: string };
+
+export interface GapItem {
+  skill: CoreSkill;
+  current: number;
+  required: number;
+  gap: number;
+}
+
+export interface RoadmapItem {
+  title: string;
+  type: string;
+  objective: string;
+  resource: string;
+  weeks: string;
+  duration: string;
+}
+
+export interface VerifiedResource {
+  provider: string;
+  type: string;
+  url: string;
+  cost: string;
+}
+
+export interface Counsellor {
+  id: string;
+  name: string;
+  initials: string;
+  role: string;
+  focus: string;
+  languages: string;
+  experience: string;
+  rating: string;
+}
+
 export type Track =
   | "Exploring all fields"
   | "Technology & Engineering"
@@ -299,7 +349,7 @@ export const counsellors = [
     name: "Dr. Priya Menon",
     initials: "PM",
     role: "School career exploration",
-    focus: "Classes 8–12 · STEM, finance and early career decisions",
+    focus: "Classes 9–12 · STEM, finance and early career decisions",
     languages: "English · Hindi · Malayalam",
     experience: "15 years",
     rating: "4.9 · 320 demo sessions",
