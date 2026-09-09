@@ -43,12 +43,10 @@ export function HeroSection({ onStart, onWorks }: { onStart: () => void; onWorks
         <div className="relative w-full aspect-square md:aspect-[4/5] lg:aspect-square flex justify-center items-end">
           {/* Main Character */}
           <div className="relative w-[85%] h-[90%] z-10 animate-float">
-            <Image
+            <img
               src="/images/student_guide.jpg"
               alt="FIGR IT Student Guide"
-              fill
-              className="object-contain"
-              priority
+              className="w-full h-full object-contain"
             />
           </div>
 
