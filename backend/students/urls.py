@@ -1,0 +1,47 @@
+from django.urls import path
+from .views import (
+    StudentProfileView,
+    AssessmentListCreateView,
+    AssessmentDetailView,
+    AssessmentAnswerView,
+    AssessmentCompleteView,
+    AssessmentResultView,
+    CareerRecommendationView,
+)
+urlpatterns = [
+    path(
+        "profile/",
+        StudentProfileView.as_view(),
+        name="student-profile",
+    ),
+    path(
+        "assessments/",
+        AssessmentListCreateView.as_view(),
+        name="assessment-list-create",
+    ),
+    path(
+        "assessments/<int:assessment_id>/",
+        AssessmentDetailView.as_view(),
+        name="assessment-detail",
+    ),
+    path(
+        "assessments/<int:assessment_id>/answers/",
+        AssessmentAnswerView.as_view(),
+        name="assessment-answer",
+    ),
+    path(
+        "assessments/<int:assessment_id>/complete/",
+        AssessmentCompleteView.as_view(),
+        name="assessment-complete",
+    ),
+    path(
+        "assessments/<int:assessment_id>/result/",
+        AssessmentResultView.as_view(),
+        name="assessment-result",
+    ),
+    path(
+        "recommendations/",
+        CareerRecommendationView.as_view(),
+        name="career-recommendations",
+    ),
+]

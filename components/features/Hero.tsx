@@ -16,7 +16,7 @@ export function HeroSection({ onStart, onWorks }: { onStart: () => void; onWorks
         </p>
         <div className="flex flex-wrap gap-4 mt-2">
           <Button onClick={onStart} className="btn-primary text-[15px] h-12 px-6">
-            Start Guided Demo <ArrowRight className="w-4 h-4" />
+            Get Started <ArrowRight className="w-4 h-4" />
           </Button>
           <Button variant="outline" onClick={onWorks} className="btn-secondary text-[15px] h-12 px-6">
             See How It Works
@@ -70,3 +70,4 @@ export function HeroSection({ onStart, onWorks }: { onStart: () => void; onWorks
     </section>
   );
 }
+
